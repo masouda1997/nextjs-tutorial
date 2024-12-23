@@ -1,11 +1,12 @@
-
 type Props = {
-    children : React.ReactNode,
+    modal:React.ReactNode,
+    children : React.ReactNode
 }
 
-function layout({children}: Props) {
+function layout({modal,children }: Props) {
   return (
     <>
+    {modal}
     {children}
     </>
   )

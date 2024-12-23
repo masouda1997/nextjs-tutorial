@@ -2,48 +2,64 @@
 import { useCallback, useRef, useEffect, MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Modal({ children }: { children: React.ReactNode }) {
-  const overlay = useRef(null);
-  const wrapper = useRef(null);
-  const router = useRouter();
+type Props = { children: React.ReactNode }
 
-  const onDismiss = useCallback(() => {
-    router.back();
-  }, [router]);
+export default function Modal({ children }: Props) {
+    const overlay = useRef(null);
+    const wrapper = useRef(null);
+    const router = useRouter();
 
-  const onClick: MouseEventHandler = useCallback(
-    (e) => {
-      if (e.target === overlay.current || e.target === wrapper.current) {
-        if (onDismiss) onDismiss();
-      }
-    },
-    [onDismiss, overlay, wrapper]
-  );
+    const onDismiss = useCallback(() => {
+        router.back();
+    }, [router]);
 
-  const onKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") onDismiss();
-    },
-    [onDismiss]
-  );
+    const onClick: MouseEventHandler = useCallback(
+        (e) => {
+            if (e.target === overlay.current || e.target === wrapper.current) {
+                if (onDismiss) onDismiss();
+            }
+        },
+        [onDismiss, overlay, wrapper]
+    );
 
-  useEffect(() => {
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onKeyDown]);
+    const onKeyDown = useCallback(
+        (e: KeyboardEvent) => {
+            if (e.key === "Escape") onDismiss();
+        },
+        [onDismiss]
+    );
 
-  return (
-    <div
-      ref={overlay}
-      className="fixed z-10 left-0 right-0 top-0 bottom-0 mx-auto bg-black/60 p-10"
-      onClick={onClick}
-    >
-      <div
-        ref={wrapper}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:w-10/12 md:w-8/12 lg:w-2/5 p-6"
-      >
-        {children}
-      </div>
-    </div>
-  );
+    useEffect(() => {
+        document.addEventListener("keydown", onKeyDown);
+        return () => document.removeEventListener("keydown", onKeyDown);
+    }, [onKeyDown]);
+
+    return (
+        <div
+            ref={overlay}
+            style={{
+                    backgroundColor:"#00000080" ,
+                    position:"fixed" ,
+                    top:"0",
+                    bottom:"0",
+                    left:"0",
+                    right:"0",
+                }}
+            onClick={onClick}
+        >
+            <div
+                ref={wrapper}
+                style={{ 
+                    position: "absolute" as const,
+                    width: "33.333333%",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    padding: "1.5rem",
+                }}
+            >
+                {children}
+            </div>
+        </div>
+    );
 }
