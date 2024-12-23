@@ -1,14 +1,12 @@
 
 type Props = {
     children : React.ReactNode,
-    modal:React.ReactNode
 }
 
-function layout(props: Props) {
+function layout({children}: Props) {
   return (
     <>
-    {props.modal}
-    {props.children}
+    {children}
     </>
   )
 }

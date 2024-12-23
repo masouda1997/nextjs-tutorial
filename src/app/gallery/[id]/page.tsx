@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 type Params = { params: { id: string } }
 
-function photoPage({ params: { id } }: Params) {
+function page({ params: { id } }: Params) {
 
     const photo: photoDataT = photoData.find((p: photoDataT) => p.id === id)! // not a good way 
 
@@ -14,8 +14,8 @@ function photoPage({ params: { id } }: Params) {
             {photo &&
                 <div className=' flex justify-between w-2/3  bg-gray-200 p-3'>
                     <div className='flex flex-col justify-between '>
-                        <h1 className=''> {photo.name}</h1>
-                        <span className=''>{photo.location}</span>
+                        <h1> {photo.name}</h1>
+                        <span>{photo.location}</span>
                         <span>{photo.location}</span>
                         <span>{photo.photographer}</span>
                     </div>
@@ -26,4 +26,4 @@ function photoPage({ params: { id } }: Params) {
     )
 }
 
-export default photoPage
+export default page

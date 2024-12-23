@@ -1,7 +1,7 @@
 import { StaticImageData } from 'next/image';
-import p1 from "./-photos/p1.jpg"
-import p2 from "./-photos/p2.jpg"
-import p3 from "./-photos/p3.jpg"
+import p1 from "./_photos/p1.jpg"
+import p2 from "./_photos/p2.jpg"
+import p3 from "./_photos/p3.jpg"
 
 
 export type photoDataT = {
