@@ -1,9 +1,16 @@
+import { redirect } from "next/navigation";
 import { FakeCommentData, IFakeCommentData } from "../../data";
 
 
 export async function GET(_req: Request, { params }: { params: { id: number | string } }) {
 
     const id = typeof params.id === "string" ? parseInt(params.id, 10) : params.id
+    console.log(id> FakeCommentData.length)
+
+    if(id> FakeCommentData.length){
+        redirect('/comments')
+    }
+
     const comment = FakeCommentData.find((c: IFakeCommentData) => c.id === id)
     if (!comment) {
         return new Response(JSON.stringify({
@@ -34,7 +41,6 @@ export async function PATCH(req: Request, { params }: { params: { id: number | s
     });
 
 }
-
 
 export async function DELETE(req: Request, { params }: { params: { id: number | string } }) {
     const id = typeof params.id === "string" ? parseInt(params.id, 10) : params.id

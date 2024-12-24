@@ -1,13 +1,14 @@
 import { NextRequest } from "next/server";
-import { FakeCommentData } from "../data";
+import { FakeCommentData } from "../data"; 
 
-export async function GET(request:NextRequest) {
+export async function GET(request:NextRequest) { //NextRequest give more info than request
   
-  // const searchParams = request.nextUrl.searchParams
-  // const query = searchParams.get("quey")
-  // const filteredData = query ? FakeCommentData.filter(q => q.content.includes(query)): FakeCommentData
-  // // const allCommnet = FakeCommentData
-  return Response.json(FakeCommentData)
+  const searchParams = request.nextUrl.searchParams
+  const query = searchParams.get("query")
+
+  const filteredData = query ? FakeCommentData.filter(q => q.content.includes(query)): FakeCommentData
+
+  return Response.json(filteredData)
 }
 
 export async function POST(request:Request){
