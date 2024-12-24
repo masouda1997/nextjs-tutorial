@@ -5,7 +5,7 @@ export interface IFakeCommentData {
     author: string,
     email:string,
     content:string,
-    createdAt:string
+    createdAt:string|Date
 }
 
 export const FakeCommentData:IFakeCommentData[] = [
