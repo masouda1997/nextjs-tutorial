@@ -1,0 +1,29 @@
+.css-dev-only-do-not-override-49qm .ant-carousel .slick-dots li button{
+   position: relative;
+   display: block;
+   width: 100%;
+   height: 3px;
+   padding: 0;
+   color: transparent;
+   font-size: 0;
+   background-color: #4355AB;
+   background: #4355AB;
+   border: 0;
+   border-radius: 3px;
+   outline: none;
+   cursor: pointer;
+   opacity: 0.2;
+   transition: all 0.3s
+
+ }
+
+ .css-dev-only-do-not-override-49qm .ant-carousel .slick-dots li.slick-active button{
+     background: #D6D6D6;
+     background-color:#D6D6D6;
+   opacity: 1;
+ }
+
+
+
+
+
