@@ -166,7 +166,7 @@ const newsSlider = (props: Props) => {
             //      description={card.content}
             //    />
             //  </Card>
-             <section dir="rtl" key={index} className="flex flex-col justify-center items-center p-2 mx-10">
+             <section dir="rtl" key={index} className="flex flex-col justify-center items-center p-2 ">
                 <div>
                    <img alt="example" src={card.imgurl}/>
                 </div>
