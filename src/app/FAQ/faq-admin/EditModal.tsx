@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataType } from "../models";
 
 type Props = {
@@ -9,16 +9,45 @@ type Props = {
 };
 
 const EditModal = ({ open, onCancel, data }: Props) => {
-   // const [category, setCategory] = useState(data?.category );
-   // const [question, setQuestion] = useState(data?.question );
-   // const [answer, setAnswer] = useState(data?.answer );
-   
-   console.log("🟢" + data?.answer , data?.category , data?.question);
 
-	const handleSubmit = (e: any) => {
+   console.log("🟢" + data?.answer , data?.category , data?.question);
+   const [formData ,setFormData] = useState<any>({
+         category: "",
+         question: "",
+         answer: "",
+      })
+
+   useEffect(() => {
+      data && setFormData({ category:data.category|| "" , question:data.question||"" , answer: data.answer|| ""})
+   }, [data])
+
+   const handleInputChange  = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
+      const {name  , value } = e.target
+      setFormData((prev:any)=>({...prev , [name]:value}))
+   }
+
+
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log("✅");
-		onCancel();
+		if(!data?.id){
+         console.error("❌ Error: No ID found for the FAQ item.");
+			return;
+      }
+      try {
+         const res =await fetch(`http://localhost:3500/items/${data.id}` , {
+            method:'PATCH',
+            headers:{
+               "Content-Type":"application/json"
+            },
+            body:JSON.stringify(formData)
+         })
+         if(!res.ok) throw new Error("Network response was not ok");
+         const result = await res.json()
+         setFormData(result)
+         onCancel();
+      } catch (error) {
+         console.error("❌ Error:", error);
+      }
 	};
 	return (
 		<Modal
@@ -34,7 +63,6 @@ const EditModal = ({ open, onCancel, data }: Props) => {
 			<form
 				onSubmit={handleSubmit}
 				className="flex flex-col justify-between items-start pt-10"
-				action=""
 			>
 				<div className="flex flex-col justify-between items-start w-full">
 					<label htmlFor="category"> دسته بندی : </label>
@@ -43,8 +71,8 @@ const EditModal = ({ open, onCancel, data }: Props) => {
 						type="text"
 						name="category"
 						id="category"
-                  value={data?.category}
-                  onChange={(e) => console.log("object")}
+                  value={formData.category}
+                  onChange={handleInputChange}
 					/>
 				</div>
 				<div className="flex flex-col justify-between items-start w-full">
@@ -53,8 +81,8 @@ const EditModal = ({ open, onCancel, data }: Props) => {
 						className="w-full border-[1px] p-1 my-1 border-blue-200 rounded"
 						name="question"
 						id="question"
-                  value={data?.question}
-                  onChange={(e)=> console.log("object")}
+                  value={formData.question}
+                  onChange={handleInputChange}
 					/>
 				</div>
 				<div className="flex flex-col justify-between items-start w-full">
@@ -63,8 +91,8 @@ const EditModal = ({ open, onCancel, data }: Props) => {
 						className="w-full border-[1px] p-1 my-1 border-blue-200 rounded"
 						name="answer"
 						id="answer"
-                  value={data?.answer}
-                  onChange={(e)=>console.log("object")}
+                  value={formData.answer}
+                  onChange={handleInputChange}
 					/>
 				</div>
 			</form>

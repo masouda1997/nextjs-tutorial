@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import type {
 	InputRef,
@@ -18,98 +18,21 @@ import { DataType } from "../models";
 
 type DataIndex = keyof DataType;
 
-const faqFakeData: DataType[] = [
-	{
-		id: 1,
-		question: "How do I reset my password?",
-		answer: "To reset your password, go to the login page and click on 'Forgot Password'. Follow the instructions sent to your registered email.",
-		category: "Accounts",
-		status: "active",
-		created_at: "2025-01-01T10:00:00Z",
-		updated_at: "2025-01-02T12:30:00Z",
-	},
-	{
-		id: 2,
-		question: "What is your refund policy?",
-		answer: "Refunds are available within 30 days of purchase. Please contact support with your order details to initiate a refund.",
-		category: "Billing",
-		status: "active",
-		created_at: "2024-12-20T08:15:00Z",
-		updated_at: "2024-12-21T14:45:00Z",
-	},
-	{
-		id: 3,
-		question: "Can I change my subscription plan?",
-		answer: "Yes, you can change your subscription plan at any time from the 'My Account' section. Additional charges may apply for upgrades.",
-		category: "Subscriptions",
-		status: "inactive",
-		created_at: "2024-11-15T16:25:00Z",
-		updated_at: "2024-11-18T09:00:00Z",
-	},
-	{
-		id: 4,
-		question: "How do I contact support?",
-		answer: "You can contact support by emailing us at support@example.com or by using the live chat option available on our website.",
-		category: "Support",
-		status: "active",
-		created_at: "2024-10-10T11:00:00Z",
-		updated_at: "2024-10-10T11:00:00Z",
-	},
-	{
-		id: 5,
-		question: "What are the system requirements for your software?",
-		answer: "Our software requires at least 8GB of RAM, a 2GHz dual-core processor, and 1GB of free disk space. It supports Windows 10 and macOS 11.0 or higher.",
-		category: "Technical",
-		status: "active",
-		created_at: "2024-09-05T07:30:00Z",
-		updated_at: "2024-09-05T07:30:00Z",
-	},
-	{
-		id: 6,
-		question: "How do I reset my password?",
-		answer: "To reset your password, go to the login page and click on 'Forgot Password'. Follow the instructions sent to your registered email.",
-		category: "Accounts",
-		status: "active",
-		created_at: "2025-01-01T10:00:00Z",
-		updated_at: "2025-01-02T12:30:00Z",
-	},
-	{
-		id: 7,
-		question: "What is your refund policy?",
-		answer: "Refunds are available within 30 days of purchase. Please contact support with your order details to initiate a refund.",
-		category: "Billing",
-		status: "active",
-		created_at: "2024-12-20T08:15:00Z",
-		updated_at: "2024-12-21T14:45:00Z",
-	},
-	{
-		id: 8,
-		question: "Can I change my subscription plan?",
-		answer: "Yes, you can change your subscription plan at any time from the 'My Account' section. Additional charges may apply for upgrades.",
-		category: "Subscriptions",
-		status: "inactive",
-		created_at: "2024-11-15T16:25:00Z",
-		updated_at: "2024-11-18T09:00:00Z",
-	},
-	{
-		id: 9,
-		question: "How do I contact support?",
-		answer: "You can contact support by emailing us at support@example.com or by using the live chat option available on our website.",
-		category: "Support",
-		status: "active",
-		created_at: "2024-10-10T11:00:00Z",
-		updated_at: "2024-10-10T11:00:00Z",
-	},
-	{
-		id: 10,
-		question: "What are the system requirements for your software?",
-		answer: "Our software requires at least 8GB of RAM, a 2GHz dual-core processor, and 1GB of free disk space. It supports Windows 10 and macOS 11.0 or higher.",
-		category: "Technical",
-		status: "active",
-		created_at: "2024-09-05T07:30:00Z",
-		updated_at: "2024-09-05T07:30:00Z",
-	},
-];
+
+const fetchData = async () : Promise<DataType[]> =>{
+   try {
+      const res = await fetch('http://localhost:3500/items')
+      if(!res.ok){
+         throw new Error ("network response not ok")
+      }
+      const  data = await res.json()
+      return data
+   } catch (error) {
+      console.error('Error fetching FAQs:', error);
+      throw error;
+   }
+}
+
 
 const FAQAdmin: React.FC = () => {
 	const [searchText, setSearchText] = useState("");
@@ -117,36 +40,60 @@ const FAQAdmin: React.FC = () => {
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const [selectedRow, setSelectedRow] = useState<DataType | null>(null);
+   const [jsonServerData , setJsonServerData ] = useState<any>('')
+   const [scrollY, setScrollY] = useState(500); // Default scroll.y value
+	const searchInput = useRef<InputRef>(null);
 
-	const showAddModal = () => {
-		setIsAddModalOpen(true);
-	};
-	const showEditModal = (row: DataType) => {
-		setSelectedRow(row);
-		setTimeout(() => {
-			console.log(row);
-			setIsEditModalOpen(true);
-		}, 300);
-	};
 
+   useEffect(() => {
+      const getFAQs = async () => {
+        try {
+          const data = await fetchData(); // Await the result of fetchData
+          setJsonServerData(data); // Set the resolved data to jsonServerData
+          console.log("data✅", data); // Log the resolved data
+        } catch (error) {
+          console.error("Error fetching FAQs:", error);
+        }
+      };
+      getFAQs(); // Call the async function
+   }, []);
+   useEffect(() => {
+      updateScrollY(); // Set initial value
+		window.addEventListener("resize", updateScrollY);
+		// Cleanup event listener when component unmount happen
+		return () => {
+			window.removeEventListener("resize", updateScrollY);
+		};
+   }, [])
+
+
+   const handleDelete = async(record:DataType) => {
+      try {
+         const res = await fetch (`http://localhost:3500/items/${record.id}`,
+            {
+               method: "DELETE",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+            }
+         )
+         if (!res.ok) {
+				throw new Error("Network response was not ok");
+			}
+         // setJsonServerData(prevData =>(
+         //    prevData.filter(item => item.id === record.id)
+         // ))
+      } catch (error) {
+         console.error("❌ Error deleting record:", error);
+			message.error("خطا در حذف ردیف!");
+      }
+   }
 	const handleCancelAdd = () => {
 		setIsAddModalOpen(false);
 	};
 	const handleCancelEdit = () => {
 		setIsEditModalOpen(false);
 	};
-
-	const searchInput = useRef<InputRef>(null);
-
-	const confirm: PopconfirmProps["onConfirm"] = (e) => {
-		console.log(e);
-		// message.success('Click on Yes');
-	};
-
-	const cancel: PopconfirmProps["onCancel"] = (e) => {
-		console.log(e);
-	};
-
 	const handleSearch = (
 		selectedKeys: string[],
 		confirm: FilterDropdownProps["confirm"],
@@ -156,15 +103,30 @@ const FAQAdmin: React.FC = () => {
 		setSearchText(selectedKeys[0]);
 		setSearchedColumn(dataIndex);
 	};
-
 	const handleReset = (clearFilters: () => void) => {
 		clearFilters();
 		setSearchText("");
 	};
+   const showAddModal = () => {
+		setIsAddModalOpen(true);
+	};
+	const showEditModal = (row: DataType) => {
+		setSelectedRow(row);
+		setTimeout(() => {
+			console.log(row);
+			setIsEditModalOpen(true);
+		}, 300);
+	};
+   const updateScrollY = () => {
+      if (window.innerWidth >= 1280) {
+         setScrollY(700);
+      } else {
+         setScrollY(300);
+      }
+   };
+   const cancel: PopconfirmProps["onCancel"] = (e) => {console.log(e);};
 
-	const getColumnSearchProps = (
-		dataIndex: DataIndex
-	): TableColumnType<DataType> => ({
+	const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<DataType> => ({
 		filterDropdown: ({
 			setSelectedKeys,
 			selectedKeys,
@@ -266,7 +228,6 @@ const FAQAdmin: React.FC = () => {
 				text
 			),
 	});
-
 	const columns: TableColumnsType<DataType> = [
 		{
 			title: "سوال",
@@ -300,7 +261,7 @@ const FAQAdmin: React.FC = () => {
 					<Popconfirm
 						title="حذف ردیف موردنظر  "
 						description="آیا از حذف این ردیف اطمینان دارید!؟ "
-						onConfirm={confirm}
+						onConfirm={()=>handleDelete(record)}
 						onCancel={cancel}
 						okText="بله "
 						cancelText="خیر"
@@ -338,11 +299,11 @@ const FAQAdmin: React.FC = () => {
 			<Button onClick={() => showAddModal()} type="primary">
 				add new FAQ
 			</Button>
-			<Table<DataType>
-				columns={columns}
-				dataSource={faqFakeData}
-				scroll={{ y: 300, x: "overflow-x-hidden" }}
-			/>
+            <Table<DataType>
+               columns={columns}
+               dataSource={jsonServerData? jsonServerData : []}
+               scroll={{ y: scrollY, x: "overflow-x-hidden" }}
+            />
 		</Flex>
 	);
 };

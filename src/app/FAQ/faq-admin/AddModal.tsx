@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { Modal, theme } from "antd";
 import React, { useState } from "react";
 
 type Props = {
@@ -7,10 +7,36 @@ type Props = {
 };
 
 const AddModal = ({ open, onCancel }: Props) => {
-	const handleSubmit = (e: any) => {
+   const [formData, setFormData] = useState({
+		category: "",
+		question: "",
+		answer: "",
+	});
+
+   const  handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const {name , value } = e.target
+      setFormData((prev) => ({...prev , [name]: value}))
+   }
+	const handleSubmit =async (e: any) => {
 		e.preventDefault();
-		console.log("✅");
-		onCancel();
+      try {
+         const res = await fetch("http://localhost:3500/items" , {
+            method:"post",
+            headers:{
+               "Content-Type":"application/json"
+            },
+            body: JSON.stringify(formData),
+         })
+         if(!res.ok) throw new Error("sth went wrong")
+         const result = await res.json()
+         console.log("✅ Success:",result)
+         setFormData({ category: "", question: "", answer: "" });
+         onCancel();
+      } catch (error) {
+         console.error("❌ Error:", error);
+      }
+
+
 	};
 	return (
 		<Modal
@@ -24,9 +50,9 @@ const AddModal = ({ open, onCancel }: Props) => {
 			okText={<span> تایید </span>}
 		>
 			<form
+            id="faqForm"
 				onSubmit={handleSubmit}
 				className="flex flex-col justify-between items-start pt-10"
-				action=""
 			>
 				<div className="flex flex-col justify-between items-start w-full">
 					<label htmlFor="category"> دسته بندی : </label>
@@ -35,6 +61,8 @@ const AddModal = ({ open, onCancel }: Props) => {
 						type="text"
 						name="category"
 						id="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
 					/>
 				</div>
 				<div className="flex flex-col justify-between items-start w-full">
@@ -43,6 +71,8 @@ const AddModal = ({ open, onCancel }: Props) => {
 						className="w-full border-[1px] p-1 my-1 border-blue-200 rounded"
 						name="question"
 						id="question"
+                  value={formData.question}
+                  onChange={handleInputChange}
 					/>
 				</div>
 				<div className="flex flex-col justify-between items-start w-full">
@@ -51,6 +81,8 @@ const AddModal = ({ open, onCancel }: Props) => {
 						className="w-full border-[1px] p-1 my-1 border-blue-200 rounded"
 						name="answer"
 						id="answer"
+                  value={formData.answer}
+                  onChange={handleInputChange}
 					/>
 				</div>
 			</form>

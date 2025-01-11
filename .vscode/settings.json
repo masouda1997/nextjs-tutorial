@@ -1,5 +1,33 @@
 {
    "cSpell.words": [
       "Entekhab"
-   ]
+   ],
+   "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#155e02",
+        "activityBar.background": "#155e02",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#05ddb1",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "editorGroup.border": "#155e02",
+        "panel.border": "#155e02",
+        "sash.hoverBorder": "#155e02",
+        "sideBar.border": "#155e02",
+        "statusBar.background": "#155e02",
+        "statusBar.border": "#155e02",
+        "statusBar.debuggingBackground": "#05ddb1",
+        "statusBar.debuggingBorder": "#05ddb1",
+        "statusBar.debuggingForeground": "#15202b",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#155e02",
+        "statusBarItem.remoteBackground": "#155e02",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "tab.activeBorder": "#155e02",
+        "titleBar.activeBackground": "#155e02",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.border": "#155e02",
+        "titleBar.inactiveBackground": "#155e02",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
 }
