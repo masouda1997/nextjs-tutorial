@@ -1,3 +1,4 @@
+"use client"
 import { Modal, theme } from "antd";
 import React, { useState } from "react";
 
