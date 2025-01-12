@@ -77,16 +77,6 @@ const FAQAdmin: React.FC<FAQAdminProps> = ({
 
   const handleDelete = async (record: DataType) => {
    deleteFAQ.mutate(record)
-   //  try {
-   //    const res = await fetch(`${deleteUrl}/${record.id}`, {
-   //      method: "DELETE",
-   //    });
-   //    if (!res.ok) {
-   //      throw new Error("Network response was not ok");
-   //    }
-   //  } catch (error) {
-   //    console.error("❌ Error deleting record:", error);
-   //  }
   };
 
   const handleSearch = (
@@ -279,22 +269,6 @@ const FAQAdmin: React.FC<FAQAdminProps> = ({
   ];
 
   return (
-    //  <Flex gap="small" dir="rtl" vertical className=" rounded-md p-2 ">
-    //    <AddModal open={isAddModalOpen} onCancel={() => setIsAddModalOpen(false)} />
-    //    <EditModal
-    //      open={isEditModalOpen}
-    //      onCancel={() => setIsEditModalOpen(false)}
-    //      data={selectedRow}
-    //    />
-    //    <Button onClick={() => showAddModal()} type="primary">
-    //      add new FAQ
-    //    </Button>
-    //    <Table<DataType>
-    //       columns={columns}
-    //      dataSource={jsonServerData}
-    //      scroll={{ y: scrollY, x: "overflow-x-hidden" }}
-    //    />
-    //  </Flex>
 
     <Flex gap="small" dir="rtl" vertical className=" rounded-md p-2 ">
       {/* AddModal and EditModal components */}
