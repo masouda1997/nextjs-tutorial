@@ -1,21 +1,9 @@
 {
   "items": [
     {
-      "id": "56",
-      "category": "car",
-      "question": "قیمت پراید 55  چند ؟ ",
-      "answer": "اطلاعی ندارم "
-    },
-    {
-      "id": "45",
-      "category": "car",
-      "question": "قیمت پراید 55  چند ؟ ",
-      "answer": "اطلاعی ندارم "
-    },
-    {
       "id": "34",
-      "category": "car",
-      "question": "قیمت پراید 55  چند ؟ ",
+      "category": "computer",
+      "question": "قیمت لب تاپ rouge  چقدر هست ؟ ",
       "answer": "اطلاعی ندارم "
     },
     {
@@ -26,9 +14,9 @@
     },
     {
       "id": "0c6e",
-      "category": "asdaasd",
-      "question": "asdasdsdddd",
-      "answer": "asdsadddddddddddd"
+      "category": " کفش ",
+      "question": "قیمت کفش ها تخفیف میخوره ؟ ",
+      "answer": "اطلاعی ندارم!"
     }
   ]
 }

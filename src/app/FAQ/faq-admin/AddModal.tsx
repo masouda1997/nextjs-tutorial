@@ -1,5 +1,5 @@
-"use client"
-import { Modal, theme } from "antd";
+import { useMutation ,useQueryClient } from "@tanstack/react-query";
+import { Modal } from "antd";
 import React, { useState } from "react";
 
 type Props = {
@@ -8,37 +8,43 @@ type Props = {
 };
 
 const AddModal = ({ open, onCancel }: Props) => {
+   const queryClient = useQueryClient()
+
    const [formData, setFormData] = useState({
-		category: "",
-		question: "",
-		answer: "",
-	});
+     category: "",
+     question: "",
+     answer: "",
+   });
+
 
    const  handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const {name , value } = e.target
       setFormData((prev) => ({...prev , [name]: value}))
    }
-	const handleSubmit =async (e: any) => {
-		e.preventDefault();
-      try {
-         const res = await fetch("http://localhost:3500/items" , {
-            method:"post",
-            headers:{
-               "Content-Type":"application/json"
-            },
-            body: JSON.stringify(formData),
-         })
-         if(!res.ok) throw new Error("sth went wrong")
-         const result = await res.json()
-         console.log("✅ Success:",result)
-         setFormData({ category: "", question: "", answer: "" });
+
+   const addFAQMutation = useMutation({
+      mutationFn: (data: any) =>
+        fetch('http://localhost:3500/items', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }).then((res) => res.json()),
+      onSuccess: () => {
+         queryClient.invalidateQueries(["faqs"]); // Invalidate the 'faqs' query
+         setFormData({ category: '', question: '', answer: '' });
          onCancel();
-      } catch (error) {
-         console.error("❌ Error:", error);
-      }
+      },
+      onError: (error) => {
+        console.error("❌ Error:", error);
+      },
+    });
 
-
-	};
+	 const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      addFAQMutation.mutate(formData);
+    };
 	return (
 		<Modal
 			title="افزودن FAQ"
@@ -87,6 +93,8 @@ const AddModal = ({ open, onCancel }: Props) => {
 					/>
 				</div>
 			</form>
+         {addFAQMutation.isLoading && <div>Loading...</div>}
+         {addFAQMutation.isError && <div>Error: Something went wrong.</div>}
 		</Modal>
 	);
 };
